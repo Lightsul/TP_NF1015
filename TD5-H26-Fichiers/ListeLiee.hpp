@@ -12,12 +12,19 @@ public:
 	using iterator = Iterateur<T>; // Définit un alias au type, pour que ListeLiee<T>::iterator corresponde au type de son itérateur.
 
 	// TODO: La construction par défaut doit créer une liste vide valide.
+	ListeLiee() : tete_(nullptr), queue_(nullptr), taille_(0) {}
 	~ListeLiee()
 	{
 		// TODO: Enlever la tête à répétition jusqu'à ce qu'il ne reste aucun élément.
 		//  Pour enlever la tête,
 		//  1. La tête doit devenir le suivant de la tête actuelle.
 		//  2. Ne pas oublier de désallouer le noeud de l'ancienne tête (si pas fait automatiquement).
+		while (tete_ != nullptr)
+		{
+			Noeud<T> *aEffacer = tete_;
+			tete_ = tete_->suivant_;
+			delete aEffacer;
+		}
 	}
 
 	bool estVide() const { return taille_ == 0; }
@@ -32,6 +39,20 @@ public:
 		// TODO: Vous devez créer un nouveau noeud en mémoire.
 		// TODO: Si la liste était vide, ce nouveau noeud est la tête et la queue;
 		//  autrement, ajustez la queue et pointeur(s) adjacent(s) en conséquence.
+		Noeud<T> *nouveau = new Noeud<T>(item);
+
+		if (estVide())
+		{
+			tete_ = queue_ = nouveau;
+		}
+		else
+		{
+			queue_->suivant_ = nouveau;
+			nouveau->precedent_ = queue_;
+			queue_ = nouveau;
+		}
+
+		++taille_;
 	}
 
 	// Insère avant la position de l'itérateur.
@@ -50,6 +71,23 @@ public:
 		//     (précédent de l'itérateur) afin qu'il point vers le noeud créé.
 		//  5. Incrémentez la taille de la liste.
 		//  6. Retournez un nouvel itérateur initialisé au nouveau noeud.
+		Noeud<T> *courant = it.position_;
+		Expects(courant != nullptr);
+
+		Noeud<T> *nouveau = new Noeud<T>(item);
+		Noeud<T> *precedent = courant->precedent_;
+
+		nouveau->suivant_ = courant;
+		nouveau->precedent_ = precedent;
+
+		if (precedent != nullptr)
+		{
+			precedent->suivant_ = nouveau;
+		}
+		courant->precedent_ = nouveau;
+		++taille_;
+
+		return iterator(nouveau);
 	}
 
 	// Enlève l'élément à la position it et retourne un itérateur vers le suivant.
@@ -69,6 +107,34 @@ public:
 		//   donc en 2. il se peut qu'il n'y ait pas de précédent et alors c'est
 		//   la tête de liste qu'il faut ajuster.
 		// NOTE: On ne demande pas de supporter d'effacer le dernier élément (c'est similaire au cas pour enlever le premier).
+		Noeud<T> *courant = it.position_;
+		Expects(courant != nullptr);
+
+		Noeud<T> *precedent = courant->precedent_;
+		Noeud<T> *suivant = courant->suivant_;
+
+		if (precedent == nullptr)
+		{
+			tete_ = suivant;
+			if (suivant != nullptr)
+			{
+				suivant->precedent_ = nullptr;
+			}
+		}
+		else
+		{
+			precedent->suivant_ = suivant;
+		}
+
+		if (suivant != nullptr)
+		{
+			suivant->precedent_ = precedent;
+		}
+
+		delete courant;
+		--taille_;
+
+		return iterator(suivant);
 	}
 
 private:
