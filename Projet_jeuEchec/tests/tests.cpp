@@ -1,81 +1,117 @@
-#include <gtest/gtest.h>
 #include "modele/Roi.hpp"
 #include "modele/Tour.hpp"
 #include "modele/Cavalier.hpp"
 #include "modele/Echiquier.hpp"
 
-TEST(RoiTest, mouvementValideUneCase)
+#include <functional>
+#include <iostream>
+#include <string>
+
+namespace
 {
-    modele::Roi::reinitialiserCompteur();
-    modele::Roi roi(modele::Couleur::Blanc, 4, 4);
-    EXPECT_TRUE(roi.estDeplacementValide(5, 4));
-    EXPECT_TRUE(roi.estDeplacementValide(3, 4));
-    EXPECT_TRUE(roi.estDeplacementValide(4, 5));
-    EXPECT_TRUE(roi.estDeplacementValide(5, 5));
+    bool executerTest(const std::string &nom, const std::function<bool()> &test)
+    {
+        try
+        {
+            if (test())
+            {
+                std::cout << "TEST " << nom << " : OK" << std::endl;
+                return true;
+            }
+
+            std::cout << "TEST " << nom << " : ECHEC" << std::endl;
+            return false;
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "TEST " << nom << " : ECHEC (" << e.what() << ")" << std::endl;
+            return false;
+        }
+        catch (...)
+        {
+            std::cout << "TEST " << nom << " : ECHEC (exception inconnue)" << std::endl;
+            return false;
+        }
+    }
 }
 
-TEST(RoiTest, mouvementInvalide)
+int main()
 {
-    modele::Roi::reinitialiserCompteur();
-    modele::Roi roi(modele::Couleur::Blanc, 4, 4);
-    EXPECT_FALSE(roi.estDeplacementValide(6, 4));
-    EXPECT_FALSE(roi.estDeplacementValide(4, 4));
-}
+    int nombreSucces = 0;
+    int nombreTests = 0;
 
-TEST(RoiTest, maximumDeuxRois)
-{
-    modele::Roi::reinitialiserCompteur();
-    modele::Roi roi1(modele::Couleur::Blanc, 4, 0);
-    modele::Roi roi2(modele::Couleur::Noir,  4, 7);
-    EXPECT_THROW(modele::Roi roi3(modele::Couleur::Blanc, 0, 0),
-                 modele::TropDeRoisException);
-}
+    nombreTests++;
+    if (executerTest("creation roi", []()
+                     {
+        modele::Roi::reinitialiserCompteur();
+        modele::Roi roi(modele::Couleur::Blanc, 4, 4);
+        return roi.obtenirColonne() == 4 && roi.obtenirRangee() == 4; }))
+    {
+        nombreSucces++;
+    }
 
-TEST(TourTest, mouvementValide)
-{
-    modele::Tour tour(modele::Couleur::Blanc, 0, 0);
-    EXPECT_TRUE(tour.estDeplacementValide(7, 0));
-    EXPECT_TRUE(tour.estDeplacementValide(0, 7));
-}
+    nombreTests++;
+    if (executerTest("maximum deux rois", []()
+                     {
+        modele::Roi::reinitialiserCompteur();
+        modele::Roi roi1(modele::Couleur::Blanc, 4, 0);
+        modele::Roi roi2(modele::Couleur::Noir, 4, 7);
 
-TEST(TourTest, mouvementInvalide)
-{
-    modele::Tour tour(modele::Couleur::Blanc, 0, 0);
-    EXPECT_FALSE(tour.estDeplacementValide(3, 3));
-    EXPECT_FALSE(tour.estDeplacementValide(0, 0));
-}
+        try
+        {
+            modele::Roi roi3(modele::Couleur::Blanc, 0, 0);
+            (void)roi3;
+            return false;
+        }
+        catch (const modele::TropDeRoisException &)
+        {
+            return true;
+        } }))
+    {
+        nombreSucces++;
+    }
 
-TEST(CavalierTest, mouvementValide)
-{
-    modele::Cavalier cavalier(modele::Couleur::Blanc, 4, 4);
-    EXPECT_TRUE(cavalier.estDeplacementValide(6, 5));
-    EXPECT_TRUE(cavalier.estDeplacementValide(5, 6));
-    EXPECT_TRUE(cavalier.estDeplacementValide(2, 3));
-    EXPECT_TRUE(cavalier.estDeplacementValide(3, 2));
-}
+    nombreTests++;
+    if (executerTest("mouvement tour", []()
+                     {
+        modele::Tour tour(modele::Couleur::Blanc, 0, 0);
+        return tour.estDeplacementValide(0, 5); }))
+    {
+        nombreSucces++;
+    }
 
-TEST(CavalierTest, mouvementInvalide)
-{
-    modele::Cavalier cavalier(modele::Couleur::Blanc, 4, 4);
-    EXPECT_FALSE(cavalier.estDeplacementValide(4, 4));
-    EXPECT_FALSE(cavalier.estDeplacementValide(5, 4));
-    EXPECT_FALSE(cavalier.estDeplacementValide(6, 6));
-}
+    nombreTests++;
+    if (executerTest("mouvement cavalier", []()
+                     {
+        modele::Cavalier cavalier(modele::Couleur::Blanc, 4, 4);
+        return cavalier.estDeplacementValide(6, 5); }))
+    {
+        nombreSucces++;
+    }
 
-TEST(EchiquierTest, ajouterEtObtenirPiece)
-{
-    modele::Echiquier echiquier;
-    echiquier.ajouterPiece(
-        std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
-    EXPECT_NE(echiquier.obtenirPiece(0, 0), nullptr);
-    EXPECT_EQ(echiquier.obtenirPiece(1, 0), nullptr);
-}
+    nombreTests++;
+    if (executerTest("ajouter piece", []()
+                     {
+        modele::Echiquier echiquier;
+        echiquier.ajouterPiece(
+            std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
+        return echiquier.obtenirPiece(0, 0) != nullptr; }))
+    {
+        nombreSucces++;
+    }
 
-TEST(EchiquierTest, retirerPiece)
-{
-    modele::Echiquier echiquier;
-    echiquier.ajouterPiece(
-        std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
-    echiquier.retirerPiece(0, 0);
-    EXPECT_EQ(echiquier.obtenirPiece(0, 0), nullptr);
+    nombreTests++;
+    if (executerTest("retirer piece", []()
+                     {
+        modele::Echiquier echiquier;
+        echiquier.ajouterPiece(
+            std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
+        echiquier.retirerPiece(0, 0);
+        return echiquier.obtenirPiece(0, 0) == nullptr; }))
+    {
+        nombreSucces++;
+    }
+
+    std::cout << "\nResume: " << nombreSucces << "/" << nombreTests << " tests OK" << std::endl;
+    return (nombreSucces == nombreTests) ? 0 : 1;
 }

@@ -55,12 +55,10 @@ add_executable(tests tests/tests.cpp
     modele/Echiquier.cpp
     bibliotheque_cours/bibliotheque_cours.cpp
     bibliotheque_cours/verification_allocation.cpp
-    googletest/src/gtest-all.cc
-    googletest/src/gtest_main.cc
 )
 
 target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR})
-target_include_directories(tests SYSTEM PRIVATE "include" "googletest/include" "googletest")
+target_include_directories(tests SYSTEM PRIVATE "include")
 target_link_libraries(tests)
 
 add_test(NAME AllTests COMMAND tests)
