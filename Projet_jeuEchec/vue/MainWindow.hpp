@@ -1,11 +1,12 @@
 /*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : MainWindow.hpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -19,6 +20,9 @@
 
 #pragma warning(push, 0)
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
 #pragma warning(pop)
 
 #include "EchiquierWidget.hpp"
@@ -31,9 +35,13 @@ namespace vue
         Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget *parent = nullptr);
+        explicit MainWindow(int positionDepart = 0, QWidget *parent = nullptr);
+
+    private slots:
+        void nouvellePartie();
 
     private:
         EchiquierWidget *echiquierWidget_ = nullptr;
     };
+
 }

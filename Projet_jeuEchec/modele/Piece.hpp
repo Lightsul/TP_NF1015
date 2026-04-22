@@ -1,11 +1,12 @@
 ﻿/*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : Piece.hpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -17,6 +18,8 @@
  */
 
 #pragma once
+
+#include <string>
 
 namespace modele
 {
@@ -42,6 +45,8 @@ namespace modele
 
         virtual bool estDeplacementValide(int colonneDestination,
                                           int rangeeDestination) const = 0;
+
+        virtual std::string obtenirSymbole() const = 0;
 
     private:
         Couleur couleur_;

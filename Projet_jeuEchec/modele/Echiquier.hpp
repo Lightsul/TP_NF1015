@@ -1,11 +1,12 @@
 /*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : Echiquier.hpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *

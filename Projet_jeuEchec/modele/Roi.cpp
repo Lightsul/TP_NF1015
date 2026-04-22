@@ -1,11 +1,12 @@
 ﻿/*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : Roi.cpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -42,7 +43,12 @@ namespace modele
 		int deltaColonne = std::abs(colonneDestination - obtenirColonne());
 		int deltaRangee = std::abs(rangeeDestination - obtenirRangee());
 
-		return deltaRangee <= 1 && deltaRangee <= 1 && (deltaColonne != 0 || deltaRangee != 0);
+		return deltaColonne <= 1 && deltaRangee <= 1 && (deltaColonne != 0 || deltaRangee != 0);
+	}
+
+	std::string Roi::obtenirSymbole() const
+	{
+		return obtenirCouleur() == Couleur::Blanc ? "\u2654" : "\u265A";
 	}
 
 }

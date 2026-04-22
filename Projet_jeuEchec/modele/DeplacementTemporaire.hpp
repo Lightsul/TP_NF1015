@@ -1,11 +1,12 @@
 ﻿/*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : DeplacementTemporaire.hpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -44,5 +45,5 @@ namespace modele
 		Piece &piece_;
 		int colonneOriginale_ = 0;
 		int rangeeOriginale_ = 0;
-	}
+	};
 }

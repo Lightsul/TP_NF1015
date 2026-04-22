@@ -25,6 +25,9 @@ file(GLOB ALL_FILES
     ${BILIOTHEQUE_COURS}
 )
 
+# Exclude test files from main executable
+list(FILTER ALL_FILES EXCLUDE REGEX "tests\\.cpp$")
+
 configurer_options_compilation_globales()
 configurer_Qt_auto_tout()
 add_executable(${PROJECT_NAME} ${ALL_FILES})
@@ -41,3 +44,23 @@ configurer_GoogleTest(${PROJECT_NAME})
 ajouter_target_couverture(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE "include")
+
+# Create test executable
+enable_testing()
+add_executable(tests tests/tests.cpp 
+    modele/Piece.cpp
+    modele/Roi.cpp
+    modele/Tour.cpp
+    modele/Cavalier.cpp
+    modele/Echiquier.cpp
+    bibliotheque_cours/bibliotheque_cours.cpp
+    bibliotheque_cours/verification_allocation.cpp
+    googletest/src/gtest-all.cc
+    googletest/src/gtest_main.cc
+)
+
+target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(tests SYSTEM PRIVATE "include" "googletest/include" "googletest")
+target_link_libraries(tests)
+
+add_test(NAME AllTests COMMAND tests)

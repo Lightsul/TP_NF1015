@@ -1,11 +1,12 @@
 ﻿/*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : Roi.hpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -40,6 +41,8 @@ namespace modele
 		~Roi();
 
 		bool estDeplacementValide(int colonneDestination, int rangeeDestination) const override;
+		std::string obtenirSymbole() const override;
+		static void reinitialiserCompteur() { nInstances_ = 0; }
 
 	private:
 		static int nInstances_;

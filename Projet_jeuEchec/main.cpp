@@ -1,11 +1,12 @@
 ﻿/*
  * Edwin Qi Hua Yang
+ * Ayoub Laribi
  * Titre du fichier : main.cpp
  *
  * ===================== COURS ET TRAVAIL ==============================
  *
  * INF1015 – Programmation orientée objet avancée
- * Projet final — Hiver 2026
+ * TP6 + Projet final — Hiver 2026
  *
  * ===================== DESCRIPTION DU FICHIER ========================
  *
@@ -19,12 +20,21 @@
 #include <QApplication>
 #pragma warning(pop)
 
+#include "vue/FenetreDemarrage.hpp"
 #include "vue/MainWindow.hpp"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	vue::MainWindow fenetre;
+
+	vue::FenetreDemarrage fenetreDemarrage;
+	if (fenetreDemarrage.exec() != QDialog::Accepted)
+		return 0;
+
+	int positionChoisie = fenetreDemarrage.obtenirPositionChoisie();
+
+	vue::MainWindow fenetre(positionChoisie);
 	fenetre.show();
+
 	return app.exec();
 }
