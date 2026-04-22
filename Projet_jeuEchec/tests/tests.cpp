@@ -5,10 +5,19 @@
 
 #include <functional>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 namespace
 {
+    void assertTest(bool condition, const std::string &message)
+    {
+        if (!condition)
+        {
+            throw std::runtime_error(message);
+        }
+    }
+
     bool executerTest(const std::string &nom, const std::function<bool()> &test)
     {
         try
@@ -45,7 +54,9 @@ int main()
                      {
         modele::Roi::reinitialiserCompteur();
         modele::Roi roi(modele::Couleur::Blanc, 4, 4);
-        return roi.obtenirColonne() == 4 && roi.obtenirRangee() == 4; }))
+        assertTest(roi.obtenirColonne() == 4, "colonne du roi invalide");
+        assertTest(roi.obtenirRangee() == 4, "rangee du roi invalide");
+        return true; }))
     {
         nombreSucces++;
     }
@@ -56,12 +67,14 @@ int main()
         modele::Roi::reinitialiserCompteur();
         modele::Roi roi1(modele::Couleur::Blanc, 4, 0);
         modele::Roi roi2(modele::Couleur::Noir, 4, 7);
+        (void)roi1;
+        (void)roi2;
 
         try
         {
             modele::Roi roi3(modele::Couleur::Blanc, 0, 0);
             (void)roi3;
-            return false;
+            assertTest(false, "une 3e instance de roi a ete creee");
         }
         catch (const modele::TropDeRoisException &)
         {
@@ -75,7 +88,8 @@ int main()
     if (executerTest("mouvement tour", []()
                      {
         modele::Tour tour(modele::Couleur::Blanc, 0, 0);
-        return tour.estDeplacementValide(0, 5); }))
+        assertTest(tour.estDeplacementValide(0, 5), "deplacement de tour invalide");
+        return true; }))
     {
         nombreSucces++;
     }
@@ -84,7 +98,8 @@ int main()
     if (executerTest("mouvement cavalier", []()
                      {
         modele::Cavalier cavalier(modele::Couleur::Blanc, 4, 4);
-        return cavalier.estDeplacementValide(6, 5); }))
+        assertTest(cavalier.estDeplacementValide(6, 5), "deplacement de cavalier invalide");
+        return true; }))
     {
         nombreSucces++;
     }
@@ -95,7 +110,8 @@ int main()
         modele::Echiquier echiquier;
         echiquier.ajouterPiece(
             std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
-        return echiquier.obtenirPiece(0, 0) != nullptr; }))
+        assertTest(echiquier.obtenirPiece(0, 0) != nullptr, "piece non ajoutee");
+        return true; }))
     {
         nombreSucces++;
     }
@@ -107,7 +123,8 @@ int main()
         echiquier.ajouterPiece(
             std::make_unique<modele::Tour>(modele::Couleur::Blanc, 0, 0));
         echiquier.retirerPiece(0, 0);
-        return echiquier.obtenirPiece(0, 0) == nullptr; }))
+        assertTest(echiquier.obtenirPiece(0, 0) == nullptr, "piece non retiree");
+        return true; }))
     {
         nombreSucces++;
     }
